@@ -1,0 +1,21 @@
+# Maven
+target/
+**/target/
+.mvn/wrapper/maven-wrapper.jar
+
+# Node / Angular
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/.npm-cache/
+
+# Local tools/cache
+tools/
+
+# IDE / OS
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db

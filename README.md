@@ -1,23 +1,32 @@
-# Frontend Angular
+# Desafio Fullstack Integrado - Solucao
+
+## Visao geral
+Esta entrega implementa uma arquitetura em camadas com:
+- `db`: scripts SQL de schema e seed
+- `ejb-module`: regra de negocio de transferencia com validacoes, lock e rollback
+- `backend-module`: API Spring Boot (CRUD + transferencia + Swagger)
+- `frontend`: aplicacao Angular consumindo a API
+
+## Arquitetura
+1. Entidade `Beneficio` no modulo EJB com `@Version` para optimistic locking.
+2. `BeneficioEjbService` aplica as regras de transferencia:
+   - valida parametros
+   - impede origem e destino iguais
+   - impede transferencia com saldo insuficiente
+   - bloqueia registros com `PESSIMISTIC_WRITE` em ordem deterministica
+   - garante rollback em excecao de negocio
+3. Backend Spring expoe endpoints REST e delega transferencia para o EJB.
+4. Frontend Angular oferece telas/formularios para CRUD e transferencia.
 
 ## Requisitos
-- Node.js 20+
-- npm 10+
+- Java 17
+- Maven 3.9+
+- Node 20+ e npm 10+
 
-## Executando backend + EJB (forma correta)
-> Execute os comandos abaixo na **raiz do projeto** (`bip-teste-integrado`).
-> Nao rode `spring-boot:run` no POM pai com `-am`, pois o modulo pai nao possui classe `main`.
-
-## Execucao
+## Executando backend + EJB
 ```bash
-mvn -pl ejb-module -am clean install -DskipTests
+mvn clean verify
 mvn -pl backend-module spring-boot:run
-```
-
-Alternativa (se estiver dentro de `backend-module`):
-```bash
-mvn -f ..\pom.xml -pl ejb-module -am install -DskipTests
-mvn spring-boot:run
 ```
 
 API base: `http://localhost:8080/api/v1/beneficios`
@@ -56,11 +65,9 @@ Exemplo de transferencia:
 - Backend:
   - `BeneficioServiceIntegrationTest`
   - `BeneficioControllerIntegrationTest`
-  - executar com: `mvn -pl backend-module -am test`
 - Frontend:
   - `app.component.spec.ts`
   - `beneficio-api.service.spec.ts`
-  - executar com: `cd frontend && npm test -- --watch=false --browsers=ChromeHeadless`
 
 ## Banco de dados
 Scripts oficiais do desafio:
@@ -73,4 +80,3 @@ O backend usa H2 em memoria com inicializacao automatica por:
 
 ## CI
 Workflow em `.github/workflows/ci.yml` executa build e testes Maven dos modulos Java.
-A aplicacao sobe em `http://localhost:4200` e consome a API em `http://localhost:8080`.

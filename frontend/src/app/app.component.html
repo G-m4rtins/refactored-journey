@@ -1,0 +1,96 @@
+<main class="container">
+  <header class="page-header">
+    <h1>Gestao de Beneficios</h1>
+    <p>CRUD completo + transferencia integrada com backend Spring e EJB.</p>
+  </header>
+
+  <section class="panel">
+    <h2>{{ editingId === null ? 'Novo beneficio' : 'Editar beneficio' }}</h2>
+    <form [formGroup]="beneficioForm" (ngSubmit)="submitBeneficio()" class="form-grid">
+      <label>
+        Nome
+        <input formControlName="nome" type="text" placeholder="Nome do beneficio" />
+      </label>
+
+      <label>
+        Descricao
+        <input formControlName="descricao" type="text" placeholder="Descricao" />
+      </label>
+
+      <label>
+        Valor
+        <input formControlName="valor" type="number" min="0" step="0.01" />
+      </label>
+
+      <label class="inline-field">
+        <input formControlName="ativo" type="checkbox" />
+        Ativo
+      </label>
+
+      <div class="actions">
+        <button type="submit" [disabled]="loading">
+          {{ editingId === null ? 'Criar' : 'Salvar' }}
+        </button>
+        <button type="button" class="secondary" (click)="cancelEdit()" *ngIf="editingId !== null">
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <section class="panel">
+    <h2>Transferencia</h2>
+    <form [formGroup]="transferenciaForm" (ngSubmit)="submitTransferencia()" class="form-grid transfer-grid">
+      <label>
+        Origem (ID)
+        <input formControlName="fromId" type="number" min="1" />
+      </label>
+
+      <label>
+        Destino (ID)
+        <input formControlName="toId" type="number" min="1" />
+      </label>
+
+      <label>
+        Valor
+        <input formControlName="amount" type="number" min="0.01" step="0.01" />
+      </label>
+
+      <div class="actions">
+        <button type="submit" [disabled]="loading">Transferir</button>
+      </div>
+    </form>
+  </section>
+
+  <p class="status success" *ngIf="message">{{ message }}</p>
+  <p class="status error" *ngIf="error">{{ error }}</p>
+
+  <section class="panel">
+    <h2>Beneficios cadastrados</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Descricao</th>
+          <th>Valor</th>
+          <th>Ativo</th>
+          <th>Acoes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let beneficio of beneficios">
+          <td>{{ beneficio.id }}</td>
+          <td>{{ beneficio.nome }}</td>
+          <td>{{ beneficio.descricao || '-' }}</td>
+          <td>{{ beneficio.valor | number:'1.2-2' }}</td>
+          <td>{{ beneficio.ativo ? 'Sim' : 'Nao' }}</td>
+          <td class="table-actions">
+            <button type="button" (click)="editBeneficio(beneficio)">Editar</button>
+            <button type="button" class="danger" (click)="removeBeneficio(beneficio.id)">Excluir</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</main>
