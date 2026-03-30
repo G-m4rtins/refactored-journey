@@ -80,3 +80,4 @@ O backend usa H2 em memoria com inicializacao automatica por:
 
 ## CI
 Workflow em `.github/workflows/ci.yml` executa build e testes Maven dos modulos Java.
+ps: CI não funcionou por ser uma ferramenta paga
